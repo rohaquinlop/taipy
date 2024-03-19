@@ -138,6 +138,7 @@ jobs:
     needs: [linux, windows, macos, sdist]
     permissions:
       id-token: write
+      contents: read
     steps:
       - uses: actions/download-artifact@v3
         with:
