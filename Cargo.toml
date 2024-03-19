@@ -1,0 +1,23 @@
+[package]
+name = "ty-py"
+version = "0.0.1"
+edition = "2021"
+authors = ["Robin Quintero <rohaquinlop301@gmail.com>"]
+license = "MIT"
+description = "An extremely fast static type checker for Python, written in Rust."
+readme = "README.md"
+homepage = "https://github.com/rohaquinlop/ty-py"
+repository = "https://github.com/rohaquinlop/ty-py"
+documentation = ""
+exclude = ["tests", ".github", ".gitignore", "targets"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "ty_py"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = "0.20.0"
+rustpython-parser = { git = "https://github.com/RustPython/Parser.git", rev = "9ce55aefdeb35e2f706ce0b02d5a2dfe6295fc57" }
+rayon = "1.8.1"
+ignore = "0.4.22"
