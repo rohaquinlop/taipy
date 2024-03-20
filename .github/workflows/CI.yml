@@ -51,7 +51,7 @@ jobs:
         shell: bash
         run: |
           set -e
-          pip install ty-py --find-links dist --force-reinstall
+          pip install typycheck --find-links dist --force-reinstall
           pip install pytest
           pytest tests/main.py
 
@@ -82,7 +82,7 @@ jobs:
         shell: bash
         run: |
           set -e
-          pip install ty-py --find-links dist --force-reinstall
+          pip install typycheck --find-links dist --force-reinstall
           pip install pytest
           pytest tests/main.py
 
@@ -112,7 +112,7 @@ jobs:
         shell: bash
         run: |
           set -e
-          pip install ty-py --find-links dist --force-reinstall
+          pip install typycheck --find-links dist --force-reinstall
           pip install pytest
           pytest tests/main.py
 

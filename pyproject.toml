@@ -3,7 +3,7 @@ requires = ["maturin>=1.5,<2.0"]
 build-backend = "maturin"
 
 [project]
-name = "ty-py"
+name = "typycheck"
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Rust",
@@ -16,8 +16,8 @@ dependencies = ["typer[all]"]
 
 
 [project.scripts]
-ty-py = "ty_py.main:app"
+typycheck = "typycheck.main:app"
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
-module-name = "ty_py.rust"
+module-name = "typycheck.rust"

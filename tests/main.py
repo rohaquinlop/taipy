@@ -1,4 +1,4 @@
-from ty_py import (
+from typycheck import (
     rust,
 )
 import unittest
