@@ -8,7 +8,7 @@ description = "An extremely fast static type checker for Python, written in Rust
 readme = "README.md"
 homepage = "https://github.com/rohaquinlop/typycheck"
 repository = "https://github.com/rohaquinlop/typycheck"
-documentation = ""
+documentation = "https://github.com/rohaquinlop/typycheck"
 exclude = ["tests", ".github", ".gitignore", "targets"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

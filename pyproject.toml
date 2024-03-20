@@ -4,6 +4,15 @@ build-backend = "maturin"
 
 [project]
 name = "typycheck"
+keywords = [
+    "type-checking",
+    "type-hints",
+    "type-annotations",
+    "mypy",
+    "pyright",
+    "pytype",
+    "pyre",
+]
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Rust",
