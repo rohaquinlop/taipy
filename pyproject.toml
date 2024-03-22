@@ -12,6 +12,7 @@ keywords = [
     "pyright",
     "pytype",
     "pyre",
+    "rust",
 ]
 requires-python = ">=3.8"
 classifiers = [
