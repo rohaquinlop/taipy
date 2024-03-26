@@ -1,14 +1,12 @@
-use pyo3::prelude::*;
+mod classes;
+mod typycheck;
 
-/// Formats the sum of two numbers as string.
-#[pyfunction]
-fn sum_as_string(a: usize, b: usize) -> PyResult<String> {
-    Ok((a + b).to_string())
-}
+use pyo3::prelude::*;
+use typycheck::type_check_file;
 
 /// A Python module implemented in Rust.
 #[pymodule]
 fn rust(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
+    m.add_function(wrap_pyfunction!(type_check_file, m)?)?;
     Ok(())
 }
