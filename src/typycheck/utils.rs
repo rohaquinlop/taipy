@@ -3,9 +3,10 @@ use crate::classes::{
     Type::{PyBool, PyFloat, PyInt, PyNone, PyString},
     Variable,
 };
+use pyo3::PyResult;
 use rustpython_parser::ast::{self, Stmt};
 
-pub fn create_variables_from_assign(assign: Stmt) -> Vec<Variable> {
+pub fn create_variables_from_assign(assign: Stmt) -> PyResult<Vec<Variable>> {
     let mut variables: Vec<Variable> = Vec::new();
 
     match assign {
@@ -51,8 +52,90 @@ pub fn create_variables_from_assign(assign: Stmt) -> Vec<Variable> {
                 });
             }
         }
+        Stmt::AnnAssign(a) => {
+            let var_name = match *a.target {
+                ast::Expr::Name(name) => name.id.to_string(),
+                _ => "".to_string(),
+            };
+
+            let types = get_types(*a.annotation);
+
+            // Check if the value matches the annotation
+            let value_type = match a.value {
+                Some(expr) => get_types(*expr),
+                None => {
+                    return Err(pyo3::exceptions::PyTypeError::new_err(
+                        "Variable must have a value",
+                    ))
+                }
+            };
+
+            // Check if the value is contained in the annotation
+            for t in value_type {
+                if !types.contains(&t) {
+                    return Err(pyo3::exceptions::PyTypeError::new_err(
+                        "Value type does not match annotation",
+                    ));
+                }
+            }
+
+            variables.push(Variable {
+                name: var_name,
+                type_: types,
+            });
+        }
         _ => {}
     }
 
-    variables
+    Ok(variables)
+}
+
+fn get_types(expr: ast::Expr) -> Vec<Type> {
+    let mut types: Vec<Type> = Vec::new();
+
+    match expr {
+        ast::Expr::Constant(c) => match c.value {
+            ast::Constant::Int(_) => {
+                types.push(PyInt);
+            }
+            ast::Constant::Float(_) => {
+                types.push(PyFloat);
+            }
+            ast::Constant::Bool(_) => {
+                types.push(PyBool);
+            }
+            ast::Constant::Str(_) => {
+                types.push(PyString);
+            }
+            ast::Constant::None => {
+                types.push(PyNone);
+            }
+            _ => {}
+        },
+        ast::Expr::Name(n) => match n.id.as_str() {
+            "int" => {
+                types.push(PyInt);
+            }
+            "float" => {
+                types.push(PyFloat);
+            }
+            "str" => {
+                types.push(PyString);
+            }
+            "bool" => {
+                types.push(PyBool);
+            }
+            _ => {}
+        },
+        ast::Expr::BinOp(b) => {
+            let left = get_types(*b.left);
+            let right = get_types(*b.right);
+
+            types.append(&mut left.clone());
+            types.append(&mut right.clone());
+        }
+        _ => {}
+    }
+
+    types
 }

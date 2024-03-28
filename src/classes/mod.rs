@@ -95,10 +95,42 @@ impl Context {
                 if variable == self.variables[mid] {
                     return Ok(true);
                 } else {
+                    // Check if the variable type is contained in the context
+
+                    for t in variable.type_.iter() {
+                        if !self.variables[mid].type_.contains(t) {
+                            let error_msg = format!(
+                                "Variable '{:}' type mismatch. Expected: {:}, got: {:}",
+                                variable.name.as_str(),
+                                self.variables[mid]
+                                    .type_
+                                    .iter()
+                                    .map(|t| t.to_string())
+                                    .collect::<Vec<String>>()
+                                    .join(" | "),
+                                variable
+                                    .type_
+                                    .iter()
+                                    .map(|t| t.to_string())
+                                    .collect::<Vec<String>>()
+                                    .join(" | "),
+                            );
+                            return Err(PyTypeError::new_err(error_msg));
+                        }
+                    }
+
+                    return Ok(true);
+                }
+            }
+        }
+
+        if variable.name == self.variables[lo].name {
+            for t in variable.type_.iter() {
+                if !self.variables[lo].type_.contains(t) {
                     let error_msg = format!(
                         "Variable '{:}' type mismatch. Expected: {:}, got: {:}",
                         variable.name.as_str(),
-                        self.variables[mid]
+                        self.variables[lo]
                             .type_
                             .iter()
                             .map(|t| t.to_string())
@@ -114,30 +146,8 @@ impl Context {
                     return Err(PyTypeError::new_err(error_msg));
                 }
             }
-        }
 
-        if variable.name == self.variables[lo].name {
-            if variable != self.variables[lo] {
-                let error_msg = format!(
-                    "Variable '{:}' type mismatch. Expected: {:}, got: {:}",
-                    variable.name.to_string(),
-                    self.variables[lo]
-                        .type_
-                        .iter()
-                        .map(|t| t.to_string())
-                        .collect::<Vec<String>>()
-                        .join(" | "),
-                    variable
-                        .type_
-                        .iter()
-                        .map(|t| t.to_string())
-                        .collect::<Vec<String>>()
-                        .join(" | "),
-                );
-                return Err(PyTypeError::new_err(error_msg));
-            } else {
-                return Ok(true);
-            }
+            return Ok(true);
         }
 
         Ok(false)

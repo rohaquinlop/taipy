@@ -8,7 +8,6 @@ use rustpython_parser::{
     Parse,
 };
 
-/// Formats the sum of two numbers as string.
 #[pyfunction]
 pub fn type_check_file(file_path: &str) -> PyResult<bool> {
     let code = std::fs::read_to_string(file_path)?;
@@ -34,7 +33,11 @@ pub fn type_check_file(file_path: &str) -> PyResult<bool> {
 fn type_check_stmt(statement: Stmt, context: &mut classes::Context) -> PyResult<bool> {
     // println!("{:#?}", statement);
 
-    let variables: Vec<classes::Variable> = utils::create_variables_from_assign(statement.clone());
+    let variables: Vec<classes::Variable> =
+        match utils::create_variables_from_assign(statement.clone()) {
+            Ok(vars) => vars,
+            Err(e) => return Err(e.into()),
+        };
 
     for variable in variables {
         match context.add_variable(variable.clone()) {
