@@ -25,7 +25,7 @@ pub fn type_check_file(file_path: &str) -> PyResult<bool> {
         }
     }
 
-    // println!("{:#?}", context);
+    println!("{:#?}", context);
 
     Ok(true)
 }

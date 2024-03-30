@@ -1,6 +1,6 @@
 use crate::classes::{
     Type,
-    Type::{PyBool, PyFloat, PyInt, PyNone, PyString},
+    Type::{PyBool, PyBytes, PyFloat, PyInt, PyNone, PyString},
     Variable,
 };
 use pyo3::PyResult;
@@ -37,6 +37,9 @@ pub fn create_variables_from_assign(assign: Stmt) -> PyResult<Vec<Variable>> {
                     ast::Constant::Str(_) => {
                         var_values.push(PyString);
                     }
+                    ast::Constant::Bytes(_) => {
+                        var_values.push(PyBytes);
+                    }
                     ast::Constant::None => {
                         var_values.push(PyNone);
                     }
@@ -48,7 +51,7 @@ pub fn create_variables_from_assign(assign: Stmt) -> PyResult<Vec<Variable>> {
             for i in 0..var_names.len() {
                 variables.push(Variable {
                     name: var_names[i].to_string(),
-                    type_: vec![var_values[i]],
+                    type_: vec![var_values[i].clone()],
                 });
             }
         }
@@ -107,6 +110,9 @@ fn get_types(expr: ast::Expr) -> Vec<Type> {
             ast::Constant::Str(_) => {
                 types.push(PyString);
             }
+            ast::Constant::Bytes(_) => {
+                types.push(PyBytes);
+            }
             ast::Constant::None => {
                 types.push(PyNone);
             }
@@ -121,6 +127,9 @@ fn get_types(expr: ast::Expr) -> Vec<Type> {
             }
             "str" => {
                 types.push(PyString);
+            }
+            "bytes" => {
+                types.push(PyBytes);
             }
             "bool" => {
                 types.push(PyBool);

@@ -2,13 +2,17 @@ use pyo3::{exceptions::PyTypeError, prelude::*};
 use std::collections::HashMap;
 use std::fmt;
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Debug)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Debug)]
 pub enum Type {
     PyInt,
     PyFloat,
     PyString,
     PyBool,
     PyNone,
+    PyBytes,
+    PyObject,
+    PyList(Vec<Self>),
+    PyTuple(Vec<Self>),
 }
 
 impl fmt::Display for Type {
@@ -19,6 +23,24 @@ impl fmt::Display for Type {
             Type::PyString => write!(f, "str"),
             Type::PyBool => write!(f, "bool"),
             Type::PyNone => write!(f, "None"),
+            Type::PyBytes => write!(f, "bytes"),
+            Type::PyObject => write!(f, "object"),
+            Type::PyList(t) => write!(
+                f,
+                "List[{:}]",
+                t.iter()
+                    .map(|t| t.to_string())
+                    .collect::<Vec<_>>()
+                    .join(" | ")
+            ),
+            Type::PyTuple(t) => write!(
+                f,
+                "Tuple[{:?}]",
+                t.iter()
+                    .map(|t| t.to_string())
+                    .collect::<Vec<_>>()
+                    .join(" | ")
+            ),
         }
     }
 }
